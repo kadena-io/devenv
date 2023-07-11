@@ -55,7 +55,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    processes.nginx.exec = "${cfg.package}/bin/nginx -c ${cfg.configFile} -e /dev/stderr";
+    processes.nginx.exec = "${cfg.package}/bin/nginx -c ${cfg.configFile} -e /dev/stderr -p $PWD";
 
     enterShell = ''
       mkdir -p ${config.env.DEVENV_STATE}/nginx
