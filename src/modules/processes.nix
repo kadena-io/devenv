@@ -132,21 +132,21 @@ in
       ${config.processManagerCommand}
 
       if [[ ! -d "$DEVENV_STATE" ]]; then
-        mkdir -p "$DEVENV_STATE"
+        ${pkgs.coreutils}/bin/mkdir -p "$DEVENV_STATE"
       fi
 
       stop_up() {
-        echo "Stopping processes..."
-        kill -TERM $(cat "$DEVENV_STATE/devenv.pid")
-        rm "$DEVENV_STATE/devenv.pid"
+        ${pkgs.coreutils}/bin/echo "Stopping processes..."
+        ${pkgs.coreutils}/bin/kill -TERM $(cat "$DEVENV_STATE/devenv.pid")
+        ${pkgs.coreutils}/bin/rm "$DEVENV_STATE/devenv.pid"
         wait
         ${config.process.after}
-        echo "Processes stopped."
+        ${pkgs.coreutils}/bin/echo "Processes stopped."
       }
 
       trap stop_up SIGINT SIGTERM
 
-      echo $! > "$DEVENV_STATE/devenv.pid"
+      ${pkgs.coreutils}/bin/echo $! > "$DEVENV_STATE/devenv.pid"
 
       wait
     '';
