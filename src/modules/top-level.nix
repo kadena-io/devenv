@@ -149,15 +149,16 @@ in
     devenv.root =
       let
         pwd = builtins.getEnv "PWD";
-      in
-      if pwd == "" then
-        throw ''
-          devenv was not able to determine the current directory.
-          Make sure Nix runs with the `--impure` flag.
+      in lib.mkDefault (
+        if pwd == "" then
+          throw ''
+            devenv was not able to determine the current directory.
+            Make sure Nix runs with the `--impure` flag.
 
-          See https://devenv.sh/guides/using-with-flakes/
-        ''
-      else pwd;
+            See https://devenv.sh/guides/using-with-flakes/
+          ''
+        else pwd
+      );
     devenv.dotfile = config.devenv.root + "/.devenv";
     devenv.state = config.devenv.dotfile + "/state";
     devenv.profile = profile;
