@@ -93,10 +93,11 @@ let
     # Setup config
     cp ${configFile} "$PGDATA/postgresql.conf"
   '';
+  absolutePgData = ''"$(${pkgs.coreutils}/bin/realpath $PGDATA)"'';
   startScript = pkgs.writeShellScriptBin "start-postgres" ''
     set -euo pipefail
     ${setupScript}/bin/setup-postgres
-    exec ${postgresPkg}/bin/postgres
+    exec ${postgresPkg}/bin/postgres -k ${absolutePgData}
   '';
 in
 {
@@ -269,7 +270,7 @@ in
         shutdown.signal = 2;
 
         readiness_probe = {
-          exec.command = "${postgresPkg}/bin/pg_isready -h $PGDATA -d template1";
+          exec.command = "${postgresPkg}/bin/pg_isready -h ${absolutePgData} -d template1";
           initial_delay_seconds = 2;
           period_seconds = 10;
           timeout_seconds = 4;
